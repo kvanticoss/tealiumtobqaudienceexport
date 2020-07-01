@@ -105,13 +105,15 @@ push: image
 # Deploying
 # =======================
 .PHONY: deploy-gcp-cloud-run
-deploy-gcp-cloud-run: push
-	gcloud run deploy --image $(IMAGE):$(VERSION) \
+deploy-gcp-cloud-run: #push
+	gcloud run deploy $(APP_NAME) --image $(IMAGE):$(VERSION) \
 	    --project=$(GCP_PROJECT) \
 		--platform managed \
 		--max-instances=10 \
 		--memory=128Mi \
-		--update-env-vars "$(cat deploy.env | sed 's/export //g' | tr '\n' ',')"
+		--region=europe-north1 \
+		--allow-unauthenticated \
+		--update-env-vars $(shell cat deploy.env | sed 's/export //g' | tr '\n' ',') \
 		--service-account $(APP_NAME)@$(GCP_PROJECT).iam.gserviceaccount.com
 # Cleaing
 # =======================
