@@ -10,6 +10,7 @@ type AudienceTable struct {
 	Properties    struct {
 		AnalyticsFullVisitor    string `bigquery:"analyticsFullVisitor" json:"ID - Last Analytics Id"`
 		AllAnalyticsFullVisitor string `bigquery:"allAnalyticsFullVisitor" json:"ID - All GA Client Ids"`
+		TealiumVisitorId        string `bigquery:"tealiumVisitorId" json:"tealium_visitor_id"`
 	} `bigquery:"Ids" json:"properties"`
 
 	TealiumAccount struct {

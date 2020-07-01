@@ -45,6 +45,9 @@ func (rtr *Router) stream(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	v.Updated = time.Now()
+	if v.Properties.TealiumVisitorId == "" {
+		v.Properties.TealiumVisitorId = chi.URLParam(r, "tealium_visitor_id")
+	}
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancelFn()
