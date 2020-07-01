@@ -108,8 +108,8 @@ deploy-gcp-cloud-run: push
 	gcloud run deploy --image $(IMAGE):$(VERSION) \
 	    --project=$(GCP_PROJECT) \
 		--platform managed \
-		--max-instances=1 \
-		--memory=256Mi \
+		--max-instances=10 \
+		--memory=128Mi \
 
 # Cleaing
 # =======================

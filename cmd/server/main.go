@@ -1,34 +1,61 @@
 package main
 
 import (
+	"context"
 	"flag"
+	"fmt"
 	"net"
+	"os"
 	"strconv"
 
 	"github.com/voi-oss/svc"
-	"github.com/zatte/golang-template/internal/httprouter"
-	"github.com/zatte/golang-template/pkg/httpserver"
+	"github.com/zatte/tealiumtobqaudiencedump/internal/httprouter"
+	"github.com/zatte/tealiumtobqaudiencedump/pkg/httpserver"
 )
 
 var (
 	// Version the current code instance; usually commit hash
 	Version    = "SNAPSHOT"
-	Name       = "golang-template"
+	Name       = "tealiumtobqaudiencedump"
 	listenPort int
+
+	projectID               string
+	datasetID               string
+	tableID                 string
+	requiredAPIKey          string
+	bigQueryDefaultLocation string = "EU"
 )
 
 func loadFlags() {
-	flag.IntVar(&listenPort, "port", 8080, "server listen address")
+	flag.IntVar(&listenPort, "port", GetEnvWithDefaultInt("PORT", 8080), "server listen address")
+	flag.StringVar(&projectID, "project", GetEnvWithDefaultString("PROJECT_ID", ""), "bigquery project id to use")
+	flag.StringVar(&datasetID, "dataset", GetEnvWithDefaultString("DATASET", ""), "bigquery dataset to use")
+	flag.StringVar(&tableID, "table", GetEnvWithDefaultString("TABLE", ""), "bigquery table to use")
+	flag.StringVar(&requiredAPIKey, "apikey", GetEnvWithDefaultString("API_KEY", ""), "key to use in API requests")
+	flag.StringVar(&bigQueryDefaultLocation, "location", GetEnvWithDefaultString("LOCATION", "EU"), "bigquery processing location")
+
 	flag.Parse()
 }
 
 func main() {
+	ctx := context.Background()
+
+	env, _ := os.LookupEnv("GOOGLE_APPLICATION_CREDENTIALS")
+	fmt.Printf("Environment:%v", env)
+
 	loadFlags()
 
 	s, err := svc.New(Name, Version)
 	svc.MustInit(s, err)
 
-	router := httprouter.New()
+	inserter, err := getTableInserter(ctx, projectID, datasetID, tableID)
+	svc.MustInit(s, err)
+
+	if requiredAPIKey == "" {
+		panic("BQ Exporter must be started with an API key")
+	}
+
+	router := httprouter.New(inserter, map[string]string{"tealium_export": requiredAPIKey})
 
 	options := append(
 		httpserver.DefaultOptions,
