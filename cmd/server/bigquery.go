@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"cloud.google.com/go/bigquery"
-	"github.com/zatte/tealiumtobqaudiencedump/internal/models"
+	"github.com/kvanticoss/tealiumtobqaudienceexport/internal/models"
 	"google.golang.org/api/googleapi"
 )
 

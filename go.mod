@@ -1,10 +1,10 @@
-module github.com/zatte/tealiumtobqaudiencedump
+module github.com/kvanticoss/tealiumtobqaudienceexport
 
 go 1.14
 
 require (
 	cloud.google.com/go/bigquery v1.9.0
-	github.com/go-chi/chi v4.1.1+incompatible
+	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/chi/v4 v4.0.0-rc1
 	github.com/go-chi/httplog v0.1.6
 	github.com/go-chi/render v1.0.1

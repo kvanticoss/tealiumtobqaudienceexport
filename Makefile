@@ -18,7 +18,7 @@ PROTOC_VERSION_TAG=v1.3.1
 GOPATH?=$(go env GOPATH)
 
 # Build version
-TAG_NAME?=$(shell git describe --tags 2> /dev/null | echo SNAPSHOT)
+TAG_NAME?=$(shell git describe --tags 2> /dev/null || echo SNAPSHOT)
 SHORT_SHA?=$(shell git rev-parse --short HEAD)
 VERSION?=$(TAG_NAME)-$(SHORT_SHA)
 
@@ -76,6 +76,7 @@ image_repository:
 version:
 	@echo $(VERSION)
 
+.PHONY: build
 build:
 	$(GOCMD) build -ldflags "-X main.Version=$(VERSION) -X main.Name=$(APP_NAME)" -o ./dist/go-app ./cmd/server
 
@@ -110,7 +111,8 @@ deploy-gcp-cloud-run: push
 		--platform managed \
 		--max-instances=10 \
 		--memory=128Mi \
-
+		--update-env-vars "$(cat deploy.env | sed 's/export //g' | tr '\n' ',')"
+		--service-account $(APP_NAME)@$(GCP_PROJECT).iam.gserviceaccount.com
 # Cleaing
 # =======================
 clean:
@@ -120,6 +122,21 @@ clean:
 
 distclean: clean
 	@rm -rf vendor
+
+
+## Service account
+service-account:
+	gcloud iam service-accounts create $(APP_NAME) \
+    --description="service account for the $(APP_NAME) service" \
+    --display-name="sa-$(APP_NAME)" \
+	--project $(GCP_PROJECT)
+
+bigquery-dataset:
+	bq --location=EU mk \
+	--dataset \
+	--description description \
+	$(GCP_PROJECT):tealium_export
+
 
 #
 # Development env setup

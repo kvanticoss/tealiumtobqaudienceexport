@@ -1,3 +1,3 @@
-# google-tealiumtobqaudiencedump
+# google-tealiumtobqaudienceexport
 
-Listens to postbacks from tealium profile updates and send selected values to bigquery
+Listens to postbacks from tealium profile updates and send selected fields to bigquery

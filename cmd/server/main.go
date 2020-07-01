@@ -9,14 +9,14 @@ import (
 	"strconv"
 
 	"github.com/voi-oss/svc"
-	"github.com/zatte/tealiumtobqaudiencedump/internal/httprouter"
-	"github.com/zatte/tealiumtobqaudiencedump/pkg/httpserver"
+	"github.com/kvanticoss/tealiumtobqaudienceexport/internal/httprouter"
+	"github.com/kvanticoss/tealiumtobqaudienceexport/pkg/httpserver"
 )
 
 var (
 	// Version the current code instance; usually commit hash
 	Version    = "SNAPSHOT"
-	Name       = "tealiumtobqaudiencedump"
+	Name       = "tealiumtobqaudienceexport"
 	listenPort int
 
 	projectID               string

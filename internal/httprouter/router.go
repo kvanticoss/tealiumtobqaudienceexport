@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/zatte/tealiumtobqaudiencedump/internal/models"
+	"github.com/kvanticoss/tealiumtobqaudienceexport/internal/models"
 
 	"cloud.google.com/go/bigquery"
 	"github.com/go-chi/chi/middleware"
