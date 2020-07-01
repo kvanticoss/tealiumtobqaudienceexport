@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  pull_request:
+    types: closed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tag
+        uses: K-Phoen/semver-release-action@master
+        with:
+          release_branch: master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - 
+        name: Docker image build
+        run: make image
+      - 
+        name: Push docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: _json_key
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: gcr.io
+          repository: $(make image_repository)
+          tags: latest,$(make version)
