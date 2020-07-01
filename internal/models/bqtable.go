@@ -13,7 +13,7 @@ type AudienceTable struct {
 	} `bigquery:"Ids" json:"properties"`
 
 	TealiumAccount struct {
-		name    string `bigquery:"name" json:"account"`
-		profile string `bigquery:"profile" json:"profile"`
+		Name    string `bigquery:"name" json:"account"`
+		Profile string `bigquery:"profile" json:"profile"`
 	} `bigquery:"tealiumAccount" json:"_trace_message_"`
 }
